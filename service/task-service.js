@@ -16,19 +16,20 @@ class TaskService{
 
     async patchTask(id, newValue){
         const taskData = await TasksModel.update({tasks: newValue}, {where: {id}})
-        return taskData
+        const newData = await TasksModel.findOne({where: {id}})
+        return newData
     }
 
     async patchDone(id, done){
         const taskData = await TasksModel.update({done: done}, {where: {id}})
-        return taskData
+        const newData =  await TasksModel.findOne({where: {id}})
+        return newData
     }
 
     async getTasks(email){
         const findUser = await UserModel.findOne({where: {email}})
         const user = findUser.dataValues.id
         const userTasks = await TasksModel.findAll({where:{user}})
-        console.log(userTasks)
         return userTasks
     }
 }

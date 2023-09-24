@@ -59,7 +59,7 @@ class UserController{
             }
             const {email, task} = req.body
             const taskData = await userService.addTask(email, task)
-            return res.json(taskData)
+            return res.json(taskData.dataValues)
         } catch (err){
             next(err)
         }
@@ -71,7 +71,49 @@ class UserController{
             if(!errors.isEmpty()){
                 return next(ApiError.BadRequest('Ошибка при валидации', errors.array()))
             }
-            const {taskId} = req.body
+            const taskId = req.body.taskId
+            const taskData = await userService.deleteTask(taskId)
+            return res.json(taskData)
+        } catch (err){
+            next(err)
+        }
+    }
+
+    async deleteAllTask(req, res, next){
+        try{
+            const errors = validationResult(req)
+            if(!errors.isEmpty()){
+                return next(ApiError.BadRequest('Ошибка при валидации', errors.array()))
+            }
+            const taskId = req.body.taskId
+            const taskData = await userService.deleteTask(taskId)
+            return res.json(taskData)
+        } catch (err){
+            next(err)
+        }
+    }
+
+    async deleteDoneTask(req, res, next){
+        try{
+            const errors = validationResult(req)
+            if(!errors.isEmpty()){
+                return next(ApiError.BadRequest('Ошибка при валидации', errors.array()))
+            }
+            const taskId = req.body.taskId
+            const taskData = await userService.deleteTask(taskId)
+            return res.json(taskData)
+        } catch (err){
+            next(err)
+        }
+    }
+
+    async deleteUndoneTask(req, res, next){
+        try{
+            const errors = validationResult(req)
+            if(!errors.isEmpty()){
+                return next(ApiError.BadRequest('Ошибка при валидации', errors.array()))
+            }
+            const taskId = req.body.taskId
             const taskData = await userService.deleteTask(taskId)
             return res.json(taskData)
         } catch (err){
@@ -85,9 +127,9 @@ class UserController{
             if(!errors.isEmpty()){
                 return next(ApiError.BadRequest('Ошибка при валидации', errors.array()))
             }
-            const {taskId, newValue} = req.body
-            const taskData = await userService.editTask(taskId, newValue)
-            return res.json(taskData)
+            const {taskId, task} = req.body
+            const taskData = await userService.editTask(taskId, task)
+            return res.json(taskData.dataValues.tasks)
         } catch (err){
             next(err)
         }
@@ -101,7 +143,7 @@ class UserController{
             }
             const {taskId, done} = req.body
             const taskData = await userService.editDone(taskId, done)
-            return res.json(taskData)
+            return res.json(taskData.dataValues.done)
         } catch (err){
             next(err)
         }
@@ -113,7 +155,7 @@ class UserController{
             if(!errors.isEmpty()){
                 return next(ApiError.BadRequest('Ошибка при валидации', errors.array()))
             }
-            const {email} = req.body
+            const {email} = req.user
             const tasks = await userService.getTasks(email)
             return res.json(tasks)
         } catch (err){

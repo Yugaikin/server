@@ -42,7 +42,6 @@ class UserService {
     }
 
     async logout(refreshToken) {
-        console.log(refreshToken)
         const token = await tokenService.removeToken(refreshToken);
         return token;
     }
@@ -91,7 +90,7 @@ class UserService {
 
     async getTasks(email){
         const tasks = await taskService.getTasks(email)
-        return tasks
+        return {tasks: tasks}
     }
 }
 
